@@ -1,5 +1,5 @@
-import './auth_repository.dart';
+import '../../models/auth_model.dart';
 
-class AuthRepository implements AuthRepository {
-
+abstract class AuthRepository {
+  Future<AuthModel> login(String email, String password);
 }
