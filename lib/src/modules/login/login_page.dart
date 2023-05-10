@@ -34,11 +34,11 @@ class _LoginPageState extends State<LoginPage> with Loader, Message {
           showLoader();
           break;
         case LoginStateStatus.success:
-          hiveLoader();
+          hideLoader();
           Modular.to.navigate('/');
           break;
         case LoginStateStatus.error:
-          hiveLoader();
+          hideLoader();
           showError(controller.errorMessage ?? 'Erro');
           break;
       }

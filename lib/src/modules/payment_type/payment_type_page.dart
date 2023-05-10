@@ -6,6 +6,7 @@ import 'package:mobx/mobx.dart';
 import '../../core/ui/helpers/loader.dart';
 import '../../core/ui/helpers/messages.dart';
 import 'payment_type_store.dart';
+import 'widgets/payment_type_form/payment_type_form_modal.dart';
 import 'widgets/payment_type_header.dart';
 import 'widgets/payment_type_item.dart';
 
@@ -34,14 +35,18 @@ class _PaymentTypePageState extends State<PaymentTypePage>
             showLoader();
             break;
           case PaymentTypeStatus.loaded:
-            hiveLoader();
+            hideLoader();
 
             break;
           case PaymentTypeStatus.error:
-            hiveLoader();
+            hideLoader();
             showError(
               controller.errorMessage ?? 'Erro ao buscar formas de pagamento',
             );
+            break;
+          case PaymentTypeStatus.addOrUpdatePayment:
+            hideLoader();
+            showAddOrUpdatePayment();
             break;
         }
       });
@@ -51,6 +56,25 @@ class _PaymentTypePageState extends State<PaymentTypePage>
     });
   }
 
+  void showAddOrUpdatePayment() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Material(
+          color: Colors.black26,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: Colors.white,
+            elevation: 10,
+            child: PaymentTypeFormModal(model: controller.paymentTypeSelected),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +82,9 @@ class _PaymentTypePageState extends State<PaymentTypePage>
       padding: const EdgeInsets.only(left: 40, top: 40, right: 40),
       child: Column(
         children: [
-          const PaymentTypeHeader(),
+          PaymentTypeHeader(
+            controller: controller,
+          ),
           const SizedBox(
             height: 50,
           ),
@@ -77,6 +103,7 @@ class _PaymentTypePageState extends State<PaymentTypePage>
                     final paymentType = controller.paymentTypes[index];
                     return PaymentTypeItem(
                       paymentTypeModel: paymentType,
+                      controller: controller,
                     );
                   },
                 );

@@ -6,12 +6,7 @@ import '../../models/payment_type_model.dart';
 import '../../repositories/payment_type/payment_type_repository.dart';
 part 'payment_type_store.g.dart';
 
-enum PaymentTypeStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-}
+enum PaymentTypeStatus { initial, loading, loaded, error, addOrUpdatePayment }
 
 class PaymentTypeStore = PaymentTypeStoreBase with _$PaymentTypeStore;
 
@@ -26,6 +21,9 @@ abstract class PaymentTypeStoreBase with Store {
 
   @readonly
   String? _errorMessage;
+
+  @readonly
+  PaymentTypeModel? _paymentTypeSelected;
 
   PaymentTypeStoreBase(this._paymentTypeRepository);
 
@@ -43,5 +41,25 @@ abstract class PaymentTypeStoreBase with Store {
 
       _errorMessage = 'Erro ao carregar formas de pagamento';
     }
+  }
+
+  Future<void> addPayment() async {
+    _status = PaymentTypeStatus.loading;
+
+    await Future.delayed(Duration.zero);
+
+    _paymentTypeSelected = null;
+
+    _status = PaymentTypeStatus.addOrUpdatePayment;
+  }
+
+  Future<void> editPayment(PaymentTypeModel? paymentType) async {
+    _status = PaymentTypeStatus.loading;
+
+    await Future.delayed(Duration.zero);
+
+    _paymentTypeSelected = paymentType;
+
+    _status = PaymentTypeStatus.addOrUpdatePayment;
   }
 }

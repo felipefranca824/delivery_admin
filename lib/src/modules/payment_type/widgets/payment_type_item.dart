@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import '../../../core/ui/styles/colors_app.dart';
 import '../../../core/ui/styles/text_styles.dart';
 import '../../../models/payment_type_model.dart';
+import '../payment_type_store.dart';
 
 class PaymentTypeItem extends StatelessWidget {
   final PaymentTypeModel paymentTypeModel;
+  final PaymentTypeStore controller;
   const PaymentTypeItem({
-    super.key,
+    Key? key,
     required this.paymentTypeModel,
-  });
+    required this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,33 +40,41 @@ class PaymentTypeItem extends StatelessWidget {
             const SizedBox(
               width: 20,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Forma de Pagamento',
-                  style: context.textStyles.textRegular.copyWith(
-                    color: colorAll,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FittedBox(
+                    child: Text(
+                      'Forma de Pagamento',
+                      style: context.textStyles.textRegular.copyWith(
+                        color: colorAll,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  paymentTypeModel.name,
-                  style: context.textStyles.textTitle.copyWith(
-                    color: colorAll,
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-              ],
+                  FittedBox(
+                    child: Text(
+                      paymentTypeModel.name,
+                      style: context.textStyles.textTitle.copyWith(
+                        color: colorAll,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.editPayment(paymentTypeModel);
+                  },
                   child: Text(
                     'Editar',
                     style: context.textStyles.textMedium.copyWith(

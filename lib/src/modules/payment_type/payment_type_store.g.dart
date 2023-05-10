@@ -63,6 +63,25 @@ mixin _$PaymentTypeStore on PaymentTypeStoreBase, Store {
     });
   }
 
+  late final _$_paymentTypeSelectedAtom =
+      Atom(name: 'PaymentTypeStoreBase._paymentTypeSelected', context: context);
+
+  PaymentTypeModel? get paymentTypeSelected {
+    _$_paymentTypeSelectedAtom.reportRead();
+    return super._paymentTypeSelected;
+  }
+
+  @override
+  PaymentTypeModel? get _paymentTypeSelected => paymentTypeSelected;
+
+  @override
+  set _paymentTypeSelected(PaymentTypeModel? value) {
+    _$_paymentTypeSelectedAtom.reportWrite(value, super._paymentTypeSelected,
+        () {
+      super._paymentTypeSelected = value;
+    });
+  }
+
   late final _$loadPaymentsAsyncAction =
       AsyncAction('PaymentTypeStoreBase.loadPayments', context: context);
 

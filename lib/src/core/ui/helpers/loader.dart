@@ -20,7 +20,7 @@ mixin Loader<T extends StatefulWidget> on State<T> {
     }
   }
 
-  void hiveLoader() {
+  void hideLoader() {
     if (isOpen) {
       isOpen = false;
       Navigator.of(context, rootNavigator: true).pop();
@@ -29,7 +29,7 @@ mixin Loader<T extends StatefulWidget> on State<T> {
 
   @override
   void dispose() {
-    hiveLoader();
+    hideLoader();
     super.dispose();
   }
 }
