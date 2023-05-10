@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> with Loader, Message {
           break;
         case LoginStateStatus.success:
           hiveLoader();
-          Modular.to.navigate('/home');
+          Modular.to.navigate('/');
           break;
         case LoginStateStatus.error:
           hiveLoader();
