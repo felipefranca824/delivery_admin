@@ -6,7 +6,7 @@ import '../../models/payment_type_model.dart';
 import '../../repositories/payment_type/payment_type_repository.dart';
 part 'payment_type_store.g.dart';
 
-enum PaymentTypeStatus { initial, loading, loaded, error, addOrUpdatePayment }
+enum PaymentTypeStatus { initial, loading, loaded, error, addOrUpdatePayment, saved }
 
 class PaymentTypeStore = PaymentTypeStoreBase with _$PaymentTypeStore;
 
@@ -67,5 +67,27 @@ abstract class PaymentTypeStoreBase with Store {
     _paymentTypeSelected = paymentType;
 
     _status = PaymentTypeStatus.addOrUpdatePayment;
+  }
+
+  @action
+  Future<void> savePayment({
+    required String name,
+    required String acronym,
+    required bool enabled,
+    int? id,
+  }) async {
+    _status = PaymentTypeStatus.loading;
+
+    final paymentTypeModel = PaymentTypeModel(
+      id: id,
+      name: name,
+      acronym: acronym,
+      enabled: enabled,
+    );
+
+
+    await _paymentTypeRepository.save(paymentTypeModel);
+
+    _status = PaymentTypeStatus.saved;
   }
 }

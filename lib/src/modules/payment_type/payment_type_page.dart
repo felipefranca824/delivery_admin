@@ -52,6 +52,11 @@ class _PaymentTypePageState extends State<PaymentTypePage>
             hideLoader();
             showAddOrUpdatePayment();
             break;
+          case PaymentTypeStatus.saved:
+            hideLoader();
+            Navigator.of(context, rootNavigator: true).pop();
+            controller.loadPayments();
+            break;
         }
       });
 
@@ -80,7 +85,10 @@ class _PaymentTypePageState extends State<PaymentTypePage>
             ),
             backgroundColor: Colors.white,
             elevation: 10,
-            child: PaymentTypeFormModal(model: controller.paymentTypeSelected),
+            child: PaymentTypeFormModal(
+              model: controller.paymentTypeSelected,
+              controller: controller,
+            ),
           ),
         );
       },

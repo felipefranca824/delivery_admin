@@ -108,6 +108,19 @@ mixin _$PaymentTypeStore on PaymentTypeStoreBase, Store {
     return _$loadPaymentsAsyncAction.run(() => super.loadPayments());
   }
 
+  late final _$savePaymentAsyncAction =
+      AsyncAction('PaymentTypeStoreBase.savePayment', context: context);
+
+  @override
+  Future<void> savePayment(
+      {required String name,
+      required String acronym,
+      required bool enabled,
+      int? id}) {
+    return _$savePaymentAsyncAction.run(() => super
+        .savePayment(name: name, acronym: acronym, enabled: enabled, id: id));
+  }
+
   late final _$PaymentTypeStoreBaseActionController =
       ActionController(name: 'PaymentTypeStoreBase', context: context);
 
