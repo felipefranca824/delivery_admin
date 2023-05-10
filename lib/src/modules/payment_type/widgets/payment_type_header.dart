@@ -1,23 +1,38 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import '../../../core/ui/widgets/base_header.dart';
 import '../payment_type_store.dart';
 
-class PaymentTypeHeader extends StatelessWidget {
+class PaymentTypeHeader extends StatefulWidget {
   final PaymentTypeStore controller;
-  const PaymentTypeHeader({super.key, required this.controller});
+  const PaymentTypeHeader({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
 
   @override
+  State<PaymentTypeHeader> createState() => _PaymentTypeHeaderState();
+}
+
+class _PaymentTypeHeaderState extends State<PaymentTypeHeader> {
+  @override
   Widget build(BuildContext context) {
+    bool? enabled;
     return BaseHeader(
       title: 'ADMINISTRAR FORMAS DE PAGAMENTOS',
       buttonLabel: 'ADICIONAR',
       buttonPressed: () {
-        controller.addPayment();
+        widget.controller.addPayment();
       },
       filterWidget: DropdownButton<bool>(
-        value: true,
-        onChanged: (value) {},
+        value: enabled,
+        onChanged: (value) {
+          setState(() {
+            enabled = value;
+            widget.controller.changeFilter(value);
+          });
+        },
         items: const [
           DropdownMenuItem(
             value: null,

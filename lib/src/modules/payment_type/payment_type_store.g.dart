@@ -82,12 +82,44 @@ mixin _$PaymentTypeStore on PaymentTypeStoreBase, Store {
     });
   }
 
+  late final _$_filterEnabledAtom =
+      Atom(name: 'PaymentTypeStoreBase._filterEnabled', context: context);
+
+  bool? get filterEnabled {
+    _$_filterEnabledAtom.reportRead();
+    return super._filterEnabled;
+  }
+
+  @override
+  bool? get _filterEnabled => filterEnabled;
+
+  @override
+  set _filterEnabled(bool? value) {
+    _$_filterEnabledAtom.reportWrite(value, super._filterEnabled, () {
+      super._filterEnabled = value;
+    });
+  }
+
   late final _$loadPaymentsAsyncAction =
       AsyncAction('PaymentTypeStoreBase.loadPayments', context: context);
 
   @override
   Future<void> loadPayments() {
     return _$loadPaymentsAsyncAction.run(() => super.loadPayments());
+  }
+
+  late final _$PaymentTypeStoreBaseActionController =
+      ActionController(name: 'PaymentTypeStoreBase', context: context);
+
+  @override
+  void changeFilter(bool? enabled) {
+    final _$actionInfo = _$PaymentTypeStoreBaseActionController.startAction(
+        name: 'PaymentTypeStoreBase.changeFilter');
+    try {
+      return super.changeFilter(enabled);
+    } finally {
+      _$PaymentTypeStoreBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

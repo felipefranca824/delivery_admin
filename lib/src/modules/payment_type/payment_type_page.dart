@@ -21,12 +21,16 @@ class _PaymentTypePageState extends State<PaymentTypePage>
     with Loader, Message {
   final controller = Modular.get<PaymentTypeStore>();
 
-  final disposer = <ReactionDisposer>[];
+  final disposers = <ReactionDisposer>[];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final filterDisposer = reaction((_) => controller.filterEnabled, (_) {
+        controller.loadPayments();
+      });
+
       final statusDisposer = reaction((_) => controller.status, (status) {
         switch (status) {
           case PaymentTypeStatus.initial:
@@ -51,9 +55,17 @@ class _PaymentTypePageState extends State<PaymentTypePage>
         }
       });
 
-      disposer.addAll([statusDisposer]);
+      disposers.addAll([statusDisposer, filterDisposer]);
       controller.loadPayments();
     });
+  }
+
+  @override
+  void dispose() {
+    for (final dispose in disposers) {
+      dispose();
+    }
+    super.dispose();
   }
 
   void showAddOrUpdatePayment() {

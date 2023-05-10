@@ -25,14 +25,20 @@ abstract class PaymentTypeStoreBase with Store {
   @readonly
   PaymentTypeModel? _paymentTypeSelected;
 
+  @readonly
+  bool? _filterEnabled;
+
   PaymentTypeStoreBase(this._paymentTypeRepository);
+
+  @action
+  void changeFilter(bool? enabled) => _filterEnabled = enabled;
 
   @action
   Future<void> loadPayments() async {
     try {
       _status = PaymentTypeStatus.loading;
 
-      _paymentTypes = await _paymentTypeRepository.findAll(null);
+      _paymentTypes = await _paymentTypeRepository.findAll(_filterEnabled);
 
       _status = PaymentTypeStatus.loaded;
     } catch (e, s) {
