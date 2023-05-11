@@ -63,7 +63,9 @@ class _ProductsPageState extends State<ProductsPage> with Loader, Message {
           BaseHeader(
             title: 'ADMINISTRAR PRODUTOS',
             buttonLabel: 'ADICIONAR PRODUTO',
-            buttonPressed: () {},
+            buttonPressed: () {
+              Modular.to.navigate('/products/detail');
+            },
             searchChange: (value) {
               debouncer.call(() {
                 controller.filterByName(value);
