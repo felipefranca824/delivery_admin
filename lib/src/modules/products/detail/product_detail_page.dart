@@ -7,6 +7,7 @@ import 'package:mobx/mobx.dart';
 import 'package:validatorless/validatorless.dart';
 
 import '../../../core/env/env.dart';
+import '../../../core/extensions/formatter_extensions.dart';
 import '../../../core/ui/helpers/loader.dart';
 import '../../../core/ui/helpers/messages.dart';
 import '../../../core/ui/helpers/size_extensions.dart';
@@ -32,35 +33,45 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   @override
   void initState() {
-    reaction((_) => controller.status, (status) {
-      switch (status) {
-        case ProductDetailStateStatus.initial:
-          break;
-        case ProductDetailStateStatus.loading:
-          showLoader();
-          break;
-        case ProductDetailStateStatus.loaded:
-          hideLoader();
-          break;
-        case ProductDetailStateStatus.error:
-          hideLoader();
-          showError(controller.errorMessage ?? 'Erro');
-          break;
-        case ProductDetailStateStatus.errorLoadProduct:
-          // TODO: Handle this case.
-          break;
-        case ProductDetailStateStatus.deleted:
-          // TODO: Handle this case.
-          break;
-        case ProductDetailStateStatus.uploaded:
-          hideLoader();
-          break;
-        case ProductDetailStateStatus.saved:
-          hideLoader();
-          Navigator.pop(context);
-          break;
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      reaction((_) => controller.status, (status) {
+        switch (status) {
+          case ProductDetailStateStatus.initial:
+            break;
+          case ProductDetailStateStatus.loading:
+            showLoader();
+            break;
+          case ProductDetailStateStatus.loaded:
+            hideLoader();
+            final model = controller.productModel!;
+
+            nameEC.text = model.name;
+            priceEC.text = model.price.currentPTBR;
+            descriptionEC.text = model.description;
+            break;
+          case ProductDetailStateStatus.error:
+            hideLoader();
+            showError(controller.errorMessage ?? 'Erro');
+            break;
+          case ProductDetailStateStatus.errorLoadProduct:
+            hideLoader();
+            showError('Erro ao carregar produto');
+            Navigator.pop(context);
+            break;
+          case ProductDetailStateStatus.uploaded:
+            hideLoader();
+            break;
+          case ProductDetailStateStatus.deleted:
+          case ProductDetailStateStatus.saved:
+            hideLoader();
+            Navigator.pop(context);
+            break;
+        }
+      });
+
+      controller.loadProduct(widget.productId);
     });
+
     super.initState();
   }
 
@@ -204,15 +215,52 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         padding: const EdgeInsets.all(5),
                         width: widthButtonAction / 2,
                         height: 60,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.red),
-                          ),
-                          onPressed: () {},
-                          child: Text(
-                            'Deletar',
-                            style: context.textStyles.textBold.copyWith(
-                              color: Colors.red,
+                        child: Visibility(
+                          visible: widget.productId != null,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmar'),
+                                    content: Text(
+                                      'Confirma a exclusão do produto ${controller.productModel!.name}',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'Cancelar',
+                                          style: context.textStyles.textBold
+                                              .copyWith(color: Colors.red),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          controller.deleteProduct();
+                                        },
+                                        child: Text(
+                                          'Confirmar',
+                                          style: context.textStyles.textBold,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              'Deletar',
+                              style: context.textStyles.textBold.copyWith(
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ),
