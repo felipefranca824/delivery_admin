@@ -7,12 +7,7 @@ import '../../models/orders/order_status.dart';
 import '../../repositories/order/order_repository.dart';
 part 'order_controller.g.dart';
 
-enum OrderStateStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-}
+enum OrderStateStatus { initial, loading, loaded, error, showDetailModal }
 
 class OrderController = OrderControllerBase with _$OrderController;
 
@@ -51,5 +46,12 @@ abstract class OrderControllerBase with Store {
       _status = OrderStateStatus.error;
       _errorMessage = 'Erro ao buscar pedidos do dia';
     }
+  }
+
+  Future<void> showDetailModal(OrderModel model) async {
+    _status = OrderStateStatus.loading;
+    await Future.delayed(Duration.zero);
+
+    _status = OrderStateStatus.showDetailModal;
   }
 }

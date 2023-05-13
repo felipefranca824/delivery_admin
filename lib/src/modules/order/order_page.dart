@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../core/ui/helpers/loader.dart';
 import '../../core/ui/helpers/messages.dart';
+import 'detail/order_detail_modal.dart';
 import 'order_controller.dart';
 import 'widgets/order_header.dart';
 import 'widgets/order_item.dart';
@@ -38,12 +39,25 @@ class _OrderPageState extends State<OrderPage> with Loader, Message {
             hideLoader();
             showError(controller.errorMessage ?? 'Erro');
             break;
+          case OrderStateStatus.showDetailModal:
+            hideLoader();
+            showOrderDetail();
+            break;
         }
       });
 
       controller.findOrders();
     });
     super.initState();
+  }
+
+  void showOrderDetail() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const OrderDetailModal();
+      },
+    );
   }
 
   @override
