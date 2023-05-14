@@ -55,7 +55,10 @@ class _OrderPageState extends State<OrderPage> with Loader, Message {
     showDialog(
       context: context,
       builder: (context) {
-        return const OrderDetailModal();
+        return OrderDetailModal(
+          controller: controller,
+          orderDto: controller.orderSelected!,
+        );
       },
     );
   }
