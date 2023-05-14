@@ -9,7 +9,14 @@ import '../../repositories/order/order_repository.dart';
 import '../../services/order/get_order_by_id.dart';
 part 'order_controller.g.dart';
 
-enum OrderStateStatus { initial, loading, loaded, error, showDetailModal }
+enum OrderStateStatus {
+  initial,
+  loading,
+  loaded,
+  error,
+  showDetailModal,
+  statusChanged,
+}
 
 class OrderController = OrderControllerBase with _$OrderController;
 
@@ -58,5 +65,14 @@ abstract class OrderControllerBase with Store {
     _orderSelected = await _getOrderById(model);
 
     _status = OrderStateStatus.showDetailModal;
+  }
+
+  @action
+  Future<void> changeStatus(OrderStatus status) async {
+    _status = OrderStateStatus.loading;
+
+    await _orderRepository.changeStatus(_orderSelected!.id, status);
+
+    _status = OrderStateStatus.statusChanged;
   }
 }

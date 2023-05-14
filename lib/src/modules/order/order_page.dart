@@ -43,6 +43,11 @@ class _OrderPageState extends State<OrderPage> with Loader, Message {
             hideLoader();
             showOrderDetail();
             break;
+          case OrderStateStatus.statusChanged:
+            hideLoader();
+            Navigator.of(context, rootNavigator: true).pop();
+            controller.findOrders();
+            break;
         }
       });
 
