@@ -107,6 +107,28 @@ mixin _$OrderController on OrderControllerBase, Store {
     return _$findOrdersAsyncAction.run(() => super.findOrders());
   }
 
+  late final _$changeStatusAsyncAction =
+      AsyncAction('OrderControllerBase.changeStatus', context: context);
+
+  @override
+  Future<void> changeStatus(OrderStatus status) {
+    return _$changeStatusAsyncAction.run(() => super.changeStatus(status));
+  }
+
+  late final _$OrderControllerBaseActionController =
+      ActionController(name: 'OrderControllerBase', context: context);
+
+  @override
+  void changeFilterStatus(OrderStatus? status) {
+    final _$actionInfo = _$OrderControllerBaseActionController.startAction(
+        name: 'OrderControllerBase.changeFilterStatus');
+    try {
+      return super.changeFilterStatus(status);
+    } finally {
+      _$OrderControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
